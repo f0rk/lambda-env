@@ -23,6 +23,8 @@ $ swaj --profile production exec lambda-env my_test_app sh -c 'echo "$ENVIRONMEN
 production
 ```
 
+See also [docker-run-env](https://github.com/f0rk/docker-run-env) for other possibilities.
+
 Install
 =======
 
