@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import argparse
+import os
+import shutil
+
+import botocore.session
+
+bs = botocore.session.get_session()
+lambda_client = bs.create_client("lambda")
+
+parser = argparse.ArgumentParser()
+parser.add_argument("lambdas")
+parser.add_argument("command", nargs=argparse.REMAINDER)
+
+args = parser.parse_args()
+
+lambdas = [l.strip() for l in args.lambdas.split(",") if l.strip()]
+
+env_vars = {}
+
+for lambda_ in lambdas:
+    resp = lambda_client.get_function_configuration(
+        FunctionName=lambda_,
+    )
+
+    for key, value in resp.get("Environment", {}).get("Variables", {}).items():
+        env_vars[key] = value
+
+new_environ = os.environ.copy()
+new_environ.update(env_vars)
+
+exec_path = args.command[0]
+if "/" not in exec_path:
+    maybe_exec_path = shutil.which(exec_path)
+    if maybe_exec_path:
+        exec_path = maybe_exec_path
+
+os.execve(exec_path, args.command, new_environ)
