@@ -19,7 +19,7 @@ Works well with [swaj](https://github.com/f0rk/swaj) or [eruza](https://github.c
 ```!sh
 $ swaj --profile dev exec lambda-env my_test_app sh -c 'echo "$ENVIRONMENT"'
 dev
-$ swaj --profile production exec lambda-env sh -c 'echo "$ENVIRONMENT"'
+$ swaj --profile production exec lambda-env my_test_app sh -c 'echo "$ENVIRONMENT"'
 production
 ```
 
